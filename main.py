@@ -15,10 +15,40 @@
 # limitations under the License.
 #
 import webapp2
+import helpers
+
+def page(name="", password="", verify="", email=""):
+    head="<head><style>.error { color: red;}</style></head>"
+    header = "<h1>Signup</h1>"
+    username_row = """<tr>
+                      <td><label for='username'>Username</label></td>
+                      <td><input type='text' name='username' required>
+                      <span class='error'>%(name)s</span>
+                      </td>
+                      </tr>"""
+    password_row = """<tr><td><label for='password'>Password</label></td>
+                      <td><input type='password' name='password' required>
+                      <span class='error'>%(password)s<span>
+                      </td>
+                      </tr>"""
+    verify_row = """<tr><td><label for='verify'>Verify Password</label></td>
+                    <td><input type='password' name='verify_password' required>
+                    <span class='error'>%(verify)s</span>
+                    </td>
+                    </tr>"""
+    email_row = """<tr><td><label for='email'>Email (optional)</label></td>
+                   <td><input type='email' name='email' optional>
+                   <span class='error'>%(email)s</span>
+                   </td>
+                   </tr>"""
+
+    form = "<body>" + head + header + "<form method='post'><table>" + username_row + password_row + verify_row + email_row + "</table><input type='submit'></form>"+ "</body>"
+
+    return form % {'name': name, 'password': password, 'verify': verify, 'email': email}
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        self.response.write(page())
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler)
