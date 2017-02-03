@@ -18,6 +18,9 @@ import webapp2
 import helpers
 
 def page(username ="", mail="", name="", password="", verify="", email=""):
+    '''Create HTML Page with a table within a form and variables for input
+       and errors.'''
+
     head="<head><style>.error { color: red;}</style></head>"
     header = "<h1>Signup</h1>"
     username_row = """<tr>
@@ -42,23 +45,28 @@ def page(username ="", mail="", name="", password="", verify="", email=""):
                    </td>
                    </tr>"""
 
-    form = "<body>" + head + header + "<form method='post'><table>" + username_row + password_row + verify_row + email_row + "</table><input type='submit'></form>"+ "</body>"
+    content = head + "<body>" + header + "<form method='post'><table>" + username_row + password_row + verify_row + email_row + "</table><input type='submit'></form>"+ "</body>"
 
-    return form % {'username': username, 'mail':mail, 'name': name, 'password': password, 'verify': verify, 'email': email}
+    # Return content with string substitution
+    return content % {'username': username, 'mail':mail, 'name': name, 'password': password, 'verify': verify, 'email': email}
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write(page())
 
     def post(self):
+
+        # Initialize variables
         have_error = False
         username = self.request.get('username')
         password= self.request.get('password')
         verify = self.request.get('verify_password')
         email = self.request.get('email')
 
+        # Keeps username and mail in input forms
         params = dict(username = username, mail = email)
 
+        # Verify validity of inputs
         if not helpers.valid_username(username):
             params['name']="That's not a valid username."
             have_error = True
@@ -66,6 +74,7 @@ class MainHandler(webapp2.RequestHandler):
         if not helpers.valid_password(password):
             params['password']="That's wasn't a valid password."
             have_error = True
+
         elif password != verify:
             params['verify'] = "Your passwords did not match."
             have_error = True
@@ -73,6 +82,9 @@ class MainHandler(webapp2.RequestHandler):
         if not helpers.valid_email(email):
             params['email'] = "That is not a valid email, stupid."
             have_error = True
+
+        # If there are errors, respond with error messages.
+        # If no errors, redirect to the Welcome page.
 
         if have_error:
             self.response.write(page(**params))
