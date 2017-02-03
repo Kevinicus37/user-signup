@@ -37,7 +37,7 @@ def page(username ="", mail="", name="", password="", verify="", email=""):
                     </td>
                     </tr>"""
     email_row = """<tr><td><label for='email'>Email (optional)</label></td>
-                   <td><input type='email' name='email' value ='%(mail)s' optional>
+                   <td><input type='text' name='email' value ='%(mail)s' optional>
                    <span class='error'>%(email)s</span>
                    </td>
                    </tr>"""
